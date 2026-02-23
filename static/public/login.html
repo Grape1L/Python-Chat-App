@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FASTAPI</title>
+  </head>
+  <body>
+    <form id="loginForm">
+      <input id="usernameInput" placeholder="Username" required />
+      <input
+        id="passwordInput"
+        placeholder="Password"
+        type="password"
+        required
+      />
+      <button type="submit">Login</button>
+    </form>
+
+    <script>
+      const form = document.querySelector("#loginForm");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const username = document.querySelector("#usernameInput").value;
+        const password = document.querySelector("#passwordInput").value;
+
+        try {
+          const response = await fetch("/api/auth/token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              username: username,
+              password: password,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            console.log("Login failed! ", result);
+            return;
+          }
+
+          console.log(result);
+
+          localStorage.setItem("access_token", result.access_token);
+
+          window.location.href = "/homepage.html";
+        } catch (error) {
+          console.error("Failed to log in. Error: ", error);
+        }
+      });
+    </script>
+  </body>
+</html>

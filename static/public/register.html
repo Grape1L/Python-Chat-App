@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FASTAPI</title>
+  </head>
+  <body>
+    <form id="registerForm">
+      <input id="username" placeholder="Username" required />
+      <input id="email" placeholder="Email" type="email" required />
+      <input id="password" placeholder="Password" type="password" required />
+      <input id="birthdate" type="date" required />
+      <button type="submit">Register</button>
+    </form>
+
+    <script>
+      const form = document.querySelector("#registerForm");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const username = document.querySelector("#username").value;
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        const birthdate = document.querySelector("#birthdate").value;
+
+        try {
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, email, password, birthdate }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            console.log("Login failed! ", result);
+            return;
+          }
+
+          console.log(result);
+
+          localStorage.setItem("access_token", result.access_token);
+
+          window.location.href = "/homepage.html";
+        } catch (error) {
+          console.error("Failed to register. Error: ", error);
+        }
+      });
+    </script>
+  </body>
+</html>
