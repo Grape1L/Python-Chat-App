@@ -47,7 +47,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: DB = Depen
         raise HTTPException(status_code=401, detail="Username or password incorrect!")
     
     access_token = authService.create_access_token(
-        data={"sub": str(result[0])}, expires_delta=timedelta(hours=24)
+        data={"id": str(result[0]), "username": result[1]}, expires_delta=timedelta(hours=24)
     )
 
     return Token(access_token=access_token, token_type="bearer")
@@ -65,6 +65,7 @@ async def register(user: UserRegister, db: DB = Depends(get_db)):
     access_token = authService.create_access_token(
         data={"id": str(user_id), "username": user.username}, expires_delta=timedelta(hours=24)
     )
+
     return Token(access_token=access_token, token_type="bearer")
 
 
