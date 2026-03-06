@@ -17,3 +17,5 @@ class UserResponse(BaseModel):
     email: EmailStr
     # is_active: bool - later
     
+class UsernameModel(BaseModel):
+    username: str

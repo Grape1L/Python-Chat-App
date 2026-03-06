@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chats</title>
+
+        <script src="../js/chats.js" type="module"></script>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #0f172a;
+                color: #e2e8f0;
+                height: 100vh;
+                display: flex;
+            }
+
+            /* Layout */
+
+            .app {
+                display: flex;
+                width: 100%;
+            }
+
+            /* Sidebar */
+
+            .sidebar {
+                width: 260px;
+                background: #020617;
+                border-right: 1px solid #1e293b;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sidebar h2 {
+                padding: 20px;
+                margin: 0;
+                border-bottom: 1px solid #1e293b;
+            }
+
+            #friendList {
+                padding: 10px;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            #friendList button {
+                width: 100%;
+                text-align: left;
+                padding: 10px;
+                margin-bottom: 6px;
+                border: none;
+                border-radius: 6px;
+                background: #1e293b;
+                color: white;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            #friendList button:hover {
+                background: #334155;
+            }
+
+            /* Chat area */
+
+            .chat {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Chat header */
+
+            .chatHeader {
+                padding: 15px 20px;
+                border-bottom: 1px solid #1e293b;
+                background: #020617;
+            }
+
+            /* Messages */
+
+            #chatMessages {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .message {
+                padding: 10px 14px;
+                border-radius: 8px;
+                max-width: 60%;
+                background: #1e293b;
+            }
+
+            .message.you {
+                background: #2563eb;
+                align-self: flex-end;
+            }
+
+            /* Input */
+
+            #messageForm {
+                display: flex;
+                padding: 15px;
+                border-top: 1px solid #1e293b;
+                gap: 10px;
+            }
+
+            #messageInput {
+                flex: 1;
+                padding: 10px;
+                border-radius: 6px;
+                border: none;
+                background: #1e293b;
+                color: white;
+            }
+
+            #messageInput:focus {
+                outline: 1px solid #38bdf8;
+            }
+
+            button {
+                border: none;
+                border-radius: 6px;
+                padding: 10px 16px;
+                background: #2563eb;
+                color: white;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background: #1d4ed8;
+            }
+
+            /* Bottom controls */
+
+            .controls {
+                padding: 10px;
+                border-top: 1px solid #1e293b;
+                display: flex;
+                gap: 10px;
+            }
+
+            .controls button {
+                flex: 1;
+                background: #334155;
+            }
+
+            .controls button:hover {
+                background: #475569;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h2>Friends</h2>
+
+                <div id="friendList"></div>
+
+                <div class="controls">
+                    <button id="disappearingMessagesButton">
+                        Disappearing messages
+                    </button>
+                    <button
+                        onclick="
+                            window.location.href =
+                                '/static/protected/addFriend.html'
+                        "
+                    >
+                        Add Friend
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="chat">
+                <div class="chatHeader">
+                    <h3 id="chatTitle">Select a friend</h3>
+                </div>
+
+                <div id="chatMessages"></div>
+
+                <form id="messageForm">
+                    <input
+                        id="messageInput"
+                        placeholder="Type message..."
+                        required
+                    />
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

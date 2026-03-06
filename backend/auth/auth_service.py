@@ -9,7 +9,7 @@ from models.user_models import UserResponse
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 KEY=""
-with open("auth/secret.key", 'r') as file:
+with open("auth/secret_key.key", 'r') as file:
     KEY = file.read()
 
 ALGORITHM = "HS256"

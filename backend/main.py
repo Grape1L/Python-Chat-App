@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="C:\\Users\\David\\OneDrive\\Desktop\\PYTHON chat app\\frontend\\templates")
 
 # Start up database
 db = DB()
@@ -29,7 +29,7 @@ app.include_router(websocket_router)
 app.include_router(http_router)
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="C:\\Users\\David\\OneDrive\\Desktop\\PYTHON chat app\\frontend\\static"), name="static")
 
 @app.get("/")
 async def root(request: Request): 
