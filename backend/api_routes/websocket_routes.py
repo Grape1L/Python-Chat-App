@@ -1,18 +1,9 @@
-from managers.manager import WebSocketManager
+from backend.managers.manager import WebSocketManager
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
-from database.database_control import DB
+from backend.database.database_control import DB
 
 router = APIRouter()
 ws_manager = WebSocketManager()
-
-
-"""
-CO ZROBIC DALEJ:
-- Dodac do bazy danych informacje o tym czy wiadomosc ma znikac czy nie ??? PROPOZYCJA
-- Dodac do bazy danych timestamp wiadomosci, zeby potem mozna bylo usuwac te znikajace wiadomości po jakims czasie ??? PROPOZYCJA
-- Zrobic encryption wiadomosci
-- Organizacja frontendu oraz dodanie CSS
-"""
 
 
 def get_db_ws(websocket: WebSocket) -> DB:
@@ -22,7 +13,10 @@ def get_db_ws(websocket: WebSocket) -> DB:
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket, db: DB = Depends(get_db_ws)):
 
-    await ws_manager.connect(websocket)
+    token = websocket.cookies.get("access_token")
+
+
+    await ws_manager.connect(websocket, token)
 
     try:
         while True:
@@ -46,7 +40,21 @@ async def websocket_endpoint(websocket: WebSocket, db: DB = Depends(get_db_ws)):
                 await ws_manager.send_message(websocket, websocket, {"error": "WebSocket not found"}, db)
                 continue
 
-            await ws_manager.send_message(websocket, target_websocket, {"message": data.get("content")}, db)
+            if data.get("type") == "key":
+                await ws_manager.send_message(
+                    websocket, 
+                    target_websocket, 
+                    {
+                        "message": data.get("content"), 
+                        "type": data.get("type"), 
+                        "firstSender": data.get("firstSender")
+                    }, 
+                    db
+                )
+                continue
+
+
+            await ws_manager.send_message(websocket, target_websocket, { "message": data.get("content"), "type": data.get("type") }, db)
 
     except WebSocketDisconnect:
         await ws_manager.disconnect(websocket)

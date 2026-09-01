@@ -1,13 +1,17 @@
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
-from api_routes.websocket_routes import router as websocket_router
-from api_routes.http_routes import router as http_router
+from backend.api_routes.websocket_routes import router as websocket_router
+from backend.api_routes.http_routes import router as http_router
 from fastapi.staticfiles import StaticFiles
-from database.database_control import DB
+from backend.database.database_control import DB
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,7 +22,7 @@ app.add_middleware(
 )
 
 
-templates = Jinja2Templates(directory="C:\\Users\\David\\OneDrive\\Desktop\\PYTHON chat app\\frontend\\templates")
+templates = Jinja2Templates(directory="frontend/templates")
 
 # Start up database
 db = DB()
@@ -29,7 +33,7 @@ app.include_router(websocket_router)
 app.include_router(http_router)
 
 
-app.mount("/static", StaticFiles(directory="C:\\Users\\David\\OneDrive\\Desktop\\PYTHON chat app\\frontend\\static"), name="static")
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
 @app.get("/")
 async def root(request: Request): 

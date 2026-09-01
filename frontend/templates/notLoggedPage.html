@@ -1,18 +1,82 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>FAST API</h1>
-    <p>You need to log in or register</p>
-    <button onclick="window.location.href = '/static/public/login.html'">
-      Log in
-    </button>
-    <button onclick="window.location.href = '/static/public/register.html'">
-      Register
-    </button>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #0f172a;
+                color: #e2e8f0;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .container {
+                max-width: 720px;
+                width: 100%;
+                background: #020617;
+                border: 1px solid #1e293b;
+                border-radius: 10px;
+                padding: 28px;
+                box-shadow: 0 8px 24px rgba(2, 6, 23, 0.6);
+                text-align: center;
+            }
+
+            h1 {
+                margin: 0 0 12px 0;
+                color: #e6eef8;
+            }
+            p {
+                color: #94a3b8;
+                margin-bottom: 18px;
+            }
+
+            .actions {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+            }
+            button {
+                border: none;
+                border-radius: 8px;
+                padding: 10px 14px;
+                background: #2563eb;
+                color: white;
+                cursor: pointer;
+            }
+            button:hover {
+                opacity: 0.95;
+            }
+        </style>
+
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>FAST API</h1>
+            <p>You need to log in or register</p>
+            <div class="actions">
+                <button
+                    onclick="window.location.href = '/static/public/login.html'"
+                >
+                    Log in
+                </button>
+                <button
+                    onclick="
+                        window.location.href = '/static/public/register.html'
+                    "
+                >
+                    Register
+                </button>
+            </div>
+        </div>
+    </body>
 </html>

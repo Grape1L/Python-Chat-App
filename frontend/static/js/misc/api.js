@@ -1,118 +1,75 @@
 import { API_BASE_URL } from "../config.js";
 
-/* Do 1 fetch instead of all of these */
+export async function apiFetch(endpoint, options = {}) {
+    const headers = options.headers || {};
 
-export async function fetchCurrentUser(token) {
-    const res = await fetch(`${API_BASE_URL}/auth/me`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    if (!res.ok) {
-        console.error("You need to log in or register");
-        window.location.href = "/";
-        return;
+    if (
+        options.body &&
+        !(options.body instanceof URLSearchParams) &&
+        !headers["Content-Type"]
+    ) {
+        headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(options.body);
     }
 
-    const userData = await res.json();
-    return userData;
-}
-
-export async function fetchMessageHistory(token, t_userID) {
-    const res = await fetch(`${API_BASE_URL}/messages/${t_userID}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
     });
 
-    const messagesData = await res.json();
-    return messagesData;
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok) {
+        console.error(`API error: ${res.status}`, data?.detail || data);
+        return null;
+    }
+
+    return data;
 }
 
-export async function addFriend(token, friendUsername) {
-    const res = await fetch(`${API_BASE_URL}/addfriend`, {
+export async function fetchCurrentUser() {
+    return await apiFetch("/auth/me", {
+        method: "GET",
+        credentials: "include",
+    });
+}
+
+export async function fetchMessageHistory(t_userID) {
+    return await apiFetch(`/messages/${t_userID}`, {
+        method: "GET",
+        credentials: "include",
+    });
+}
+
+export async function addFriend(friendUsername) {
+    return await apiFetch("/addfriend", {
         method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: friendUsername }),
+        body: { username: friendUsername },
+        credentials: "include",
     });
-    const result = await res.json();
-    if (!res.ok) {
-        console.error("Failed to add friend. ", result.detail);
-        return result;
-    }
-
-    return result;
 }
 
 export async function getAuthToken(username, password) {
-    const res = await fetch(`${API_BASE_URL}/auth/token`, {
+    return await apiFetch("/auth/token", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
             username: username,
             password: password,
         }),
     });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-        console.log("Login failed! ", result);
-        return;
-    }
-
-    if (!result.access_token) {
-        console.error("Login failed! No access token received.");
-        return;
-    }
-
-    return result;
 }
 
 export async function registerUser(username, email, password, birthdate) {
-    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+    return await apiFetch("/auth/register", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password, birthdate }),
+        body: { username, email, password, birthdate },
     });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-        console.log("Registration failed! ", result);
-        return;
-    }
-
-    if (!result.access_token) {
-        console.error("Registration failed! No access token received.");
-        return;
-    }
-
-    return result;
 }
 
-export async function fetchFriends(token) {
-    const res = await fetch(`${API_BASE_URL}/friends`, {
+export async function fetchFriends() {
+    return await apiFetch("/friends", {
         method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
     });
-
-    const result = await res.json();
-    if (!res.ok) {
-        console.error("Failed to fetch friends. ", result.detail);
-        return;
-    }
-
-    return result;
 }

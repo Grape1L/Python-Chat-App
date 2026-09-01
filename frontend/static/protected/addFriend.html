@@ -6,15 +6,126 @@
         <script src="../js/addFriend.js" type="module"></script>
 
         <title>Document</title>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #0f172a;
+                color: #e2e8f0;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 540px;
+                background: #020617;
+                border: 1px solid #1e293b;
+                border-radius: 10px;
+                padding: 24px;
+                box-shadow: 0 8px 24px rgba(2, 6, 23, 0.6);
+            }
+
+            h1 {
+                margin: 0 0 12px 0;
+                font-size: 20px;
+                color: #e6eef8;
+            }
+
+            form {
+                display: flex;
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            label {
+                font-size: 13px;
+                color: #94a3b8;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="password"] {
+                padding: 12px;
+                border-radius: 8px;
+                border: none;
+                background: #0b1220;
+                color: #e2e8f0;
+                outline: none;
+            }
+
+            input[type="text"]::placeholder,
+            input[type="email"]::placeholder,
+            input[type="password"]::placeholder {
+                color: #94a3b8;
+            }
+
+            .actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 8px;
+            }
+
+            button {
+                border: none;
+                border-radius: 8px;
+                padding: 10px 14px;
+                background: #2563eb;
+                color: white;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background: #1d4ed8;
+            }
+
+            .secondary {
+                background: #334155;
+            }
+
+            .secondary:hover {
+                background: #475569;
+            }
+        </style>
     </head>
     <body>
-        <form id="addFriendForm">
-            <input
-                id="friendUsername"
-                placeholder="Friend's username"
-                required
-            />
-            <button type="submit">Add Friend</button>
-        </form>
+        <div class="container">
+            <h1>Add a Friend</h1>
+
+            <form id="addFriendForm" autocomplete="off">
+                <label for="friendUsername">Friend's username</label>
+                <input
+                    id="friendUsername"
+                    name="friendUsername"
+                    type="text"
+                    placeholder="Enter username"
+                    required
+                />
+
+                <div class="actions">
+                    <button type="submit">Add Friend</button>
+                    <button
+                        type="button"
+                        class="secondary"
+                        onclick="
+                            window.location.href =
+                                '/static/protected/chats.html'
+                        "
+                    >
+                        Back to Chats
+                    </button>
+                </div>
+            </form>
+            <div class="info">
+                <p id="message"></p>
+            </div>
+        </div>
     </body>
 </html>

@@ -1,4 +1,3 @@
-import { saveToken } from "./misc/auth.js";
 import { getAuthToken } from "./misc/api.js";
 
 const form = document.querySelector("#loginForm");
@@ -10,14 +9,19 @@ form.addEventListener("submit", async (event) => {
 
     try {
         const result = await getAuthToken(username, password);
-        console.log(result);
+        const messageContainer = document.querySelector("#message");
 
-        if (!result || !result.access_token) {
+        if (!result) {
             console.error("Login failed! No access token received.");
+            messageContainer.textContent =
+                "Login failed. No access token received";
             return;
         }
 
-        saveToken(result.access_token);
+        if (result.detail) {
+            messageContainer.textContent = result.detail;
+            return;
+        }
 
         window.location.href = "/static/protected/chats.html";
     } catch (error) {

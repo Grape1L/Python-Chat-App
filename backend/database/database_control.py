@@ -1,5 +1,5 @@
 import sqlite3
-from models.user_models import UserRegister, UserResponse
+from backend.models.user_models import UserRegister, UserResponse
 from datetime import date
 
 class DB:
@@ -49,8 +49,6 @@ class DB:
             )
         """)
 
-        # Create messages table and other
-
         self.connection.commit()
 
     def get_users(self):
@@ -83,7 +81,7 @@ class DB:
         return self.cursor.fetchone()
 
     def get_user_by_username(self, username: str):
-        self.cursor.execute("SELECT * FROM Users WHERE username = ?", (username,))
+        self.cursor.execute("SELECT * FROM Users WHERE username = ? COLLATE NOCASE", (username,))
         return self.cursor.fetchone()
     
     def add_friend(self, user_a: int, user_b: int, requester_id: int):

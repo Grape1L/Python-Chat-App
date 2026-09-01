@@ -3,13 +3,13 @@ from datetime import timedelta, datetime, timezone
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
-from models.user_models import UserResponse
+from fastapi import Depends, HTTPException, status, Request
+from backend.models.user_models import UserResponse
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 KEY=""
-with open("auth/secret_key.key", 'r') as file:
+with open("backend/auth/secret_key.key", 'r') as file:
     KEY = file.read()
 
 ALGORITHM = "HS256"
@@ -17,14 +17,6 @@ ACCESS_TOKEN_EXPIRE_MIN = 30
 
 class AuthService:
     def __init__(self):
-        # self.KEY=""
-        # with open("auth/secret.key", 'r') as file:
-        #     self.KEY = file.read()
-
-        # self.ALGORITHM = "HS256"
-        # self.ACCESS_TOKEN_EXPIRE_MIN = 30
-
-
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -48,7 +40,7 @@ class AuthService:
         encoded_jwt = jwt.encode(to_encode, KEY, algorithm=ALGORITHM)
         return encoded_jwt
     
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+def verify_token(token: str):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -57,12 +49,24 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
     try:
         payload = jwt.decode(token, KEY, algorithms=[ALGORITHM])
+
         if not payload.get("id"):
             raise credentials_exception
+        
+        return payload
+    
     except JWTError:
         raise credentials_exception
+
+
+def get_current_user(request: Request):
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     
-    return payload
+    return verify_token(token)
+
 
 def get_current_active_user(currentUser = Depends(get_current_user)):
     return currentUser

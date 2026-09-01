@@ -1,5 +1,4 @@
-import { registerUser } from "./misc/api";
-import { saveToken } from "./misc/auth";
+import { registerUser } from "./misc/api.js";
 
 const form = document.querySelector("#registerForm");
 form.addEventListener("submit", async (event) => {
@@ -13,8 +12,18 @@ form.addEventListener("submit", async (event) => {
     try {
         const result = await registerUser(username, email, password, birthdate);
         console.log(result);
+        const messageContainer = document.querySelector("#message");
 
-        saveToken(result.access_token);
+        if (!result) {
+            console.error("Registration failed");
+            messageContainer.textContent = "Registration failed";
+            return;
+        }
+
+        if (result.detail) {
+            messageContainer.textContent = result.detail;
+            return;
+        }
 
         window.location.href = "/static/protected/chats.html";
     } catch (error) {
