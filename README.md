@@ -143,23 +143,6 @@ uvicorn <module>:<app> --reload
 
 The project is designed to be run locally during development. Database and configuration details may change as the application continues to evolve.
 
-## What I Learned
-
-This project was built as a practical way to develop backend engineering skills rather than as a tutorial implementation. The main areas of focus were:
-
-- Designing and organizing a Python backend
-- Building APIs with FastAPI
-- Authentication and authorization with JWTs
-- Secure password storage using password hashing
-- Working with relational databases and SQL
-- Building real-time features with WebSockets
-- Managing multiple active connections
-- Separating application responsibilities into different modules
-- Writing automated tests with pytest
-- Debugging backend logic and handling edge cases
-- Connecting a browser client to a Python backend
-
-A major part of the project has been learning how individual backend components interact as the application grows, rather than treating the server as a single monolithic script.
 
 ## Frontend Note
 
