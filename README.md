@@ -51,29 +51,6 @@ The frontend is deliberately lightweight. It is basic and focused on layout and 
 
 - **pytest**
 
-## Architecture
-
-The application is organized around a backend-first architecture:
-
-```text
-Browser / Client
-       │
-       ├── HTTP requests ───────────────┐
-       │                                │
-       └── WebSocket connection ────────┤
-                                        ▼
-                                  FastAPI Backend
-                                        │
-                       ┌────────────────┼────────────────┐
-                       │                │                │
-                       ▼                ▼                ▼
-                  API / Routes     Auth / Security   WebSocket Manager
-                       │                │                │
-                       └────────────────┼────────────────┘
-                                        ▼
-                                   SQLite Database
-```
-
 The backend is responsible for authentication, request handling, communication between connected clients, and persistence of application data. WebSockets are used for real-time communication so messages can be delivered without relying on repeated polling requests.
 
 ## Authentication
