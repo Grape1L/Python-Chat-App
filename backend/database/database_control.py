@@ -3,7 +3,7 @@ from backend.models.user_models import UserRegister, UserResponse
 from datetime import date
 
 class DB:
-    def __init__(self, db_path="database/Database.db"):
+    def __init__(self, db_path="backend/database/Database.db"):
         self.connection = sqlite3.connect(db_path, check_same_thread=False)
         self.cursor = self.connection.cursor()
 
