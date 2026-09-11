@@ -5,12 +5,10 @@ from datetime import date
 class DB:
     def __init__(self, db_path="backend/database/Database.db"):
         self.connection = sqlite3.connect(db_path, check_same_thread=False)
-        self.cursor = self.connection.cursor()
-
         self._create_tables()
 
     def _create_tables(self):
-        self.cursor.execute("""
+        self.connection.execute("""
             CREATE TABLE IF NOT EXISTS Users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 username TEXT UNIQUE, 
@@ -21,7 +19,7 @@ class DB:
             )
         """)
 
-        self.cursor.execute("""
+        self.connection.execute("""
             CREATE TABLE IF NOT EXISTS Friends (
                 friendship_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 requester_id INTEGER NOT NULL,
@@ -37,7 +35,7 @@ class DB:
             )
         """)
 
-        self.cursor.execute("""
+        self.connection.execute("""
             CREATE TABLE IF NOT EXISTS Messages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 sender_id INTEGER NOT NULL,
@@ -52,15 +50,14 @@ class DB:
         self.connection.commit()
 
     def get_users(self):
-        
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             SELECT id, username, email FROM Users
         """)
         
-        return self.cursor.fetchall()
+        return cursor.fetchall()
 
     def add_user(self, user: UserRegister) -> int:
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             INSERT INTO Users (username, email, password, birthdate, creation_date)
             VALUES (?, ?, ?, ?, ?)
             """, 
@@ -74,29 +71,29 @@ class DB:
         )
         self.connection.commit()
 
-        return self.cursor.lastrowid
+        return cursor.lastrowid
 
     def get_user_by_id(self, user_id: int):
-        self.cursor.execute("SELECT id, username, email FROM Users WHERE id = ?", (user_id,))
-        return self.cursor.fetchone()
+        cursor = self.connection.execute("SELECT id, username, email FROM Users WHERE id = ?", (user_id,))
+        return cursor.fetchone()
 
     def get_user_by_username(self, username: str):
-        self.cursor.execute("SELECT * FROM Users WHERE username = ? COLLATE NOCASE", (username,))
-        return self.cursor.fetchone()
+        cursor = self.connection.execute("SELECT * FROM Users WHERE username = ? COLLATE NOCASE", (username,))
+        return cursor.fetchone()
     
     def add_friend(self, user_a: int, user_b: int, requester_id: int):
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             SELECT requester_id, status FROM Friends WHERE a_user_id = ? AND b_user_id = ?
             """, 
             (user_a, user_b,)
         )
 
-        result = self.cursor.fetchone()
+        result = cursor.fetchone()
         if result:
             if result[0] == requester_id or result[1] == "accepted":
                 return result
             else:
-                self.cursor.execute("""
+                self.connection.execute("""
                         UPDATE Friends SET status = ? 
                         WHERE a_user_id = ? AND b_user_id = ?
                     """, 
@@ -106,7 +103,7 @@ class DB:
                 self.connection.commit()
                 return ["Friend request accepted"]
 
-        self.cursor.execute("""
+        self.connection.execute("""
             INSERT INTO Friends (requester_id, a_user_id, b_user_id, status, creation_date)
             VALUES (?,?,?,?,?)
             """, 
@@ -123,7 +120,7 @@ class DB:
         return ["Friend request sent"]
 
     def get_users_friends(self, user_id: int):
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             SELECT u.id, u.username 
                 FROM Friends f 
                 JOIN Users u 
@@ -137,34 +134,34 @@ class DB:
         """,
         (user_id, user_id, user_id))
 
-        return self.cursor.fetchall()
+        return cursor.fetchall()
     
     def are_friends(self, user_a: int, user_b: int) -> bool:
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             SELECT status FROM Friends 
             WHERE 
                 (a_user_id = ? AND b_user_id = ?) OR (a_user_id = ? AND b_user_id = ?)
         """, (user_a, user_b, user_b, user_a))
 
-        result = self.cursor.fetchone()
+        result = cursor.fetchone()
         if result is None:
             return False
         
-        return result[0] == "accepted"
+        return True
     
 
 
     def save_message(self, sender_id: int, recipient_id: int, content: str):
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             INSERT INTO Messages (sender_id, recipient_id, content)
             VALUES (?, ?, ?)
         """, (sender_id, recipient_id, content))
 
         self.connection.commit()
-        return self.cursor.lastrowid
+        return cursor.lastrowid
     
     def get_messages(self, requester_id: int, friend_id: int):
-        self.cursor.execute("""
+        cursor = self.connection.execute("""
             SELECT m.sender_id, m.recipient_id, m.content, m.timestamp, u.username
             FROM Messages m
             JOIN Users u ON m.sender_id = u.id
@@ -173,11 +170,10 @@ class DB:
                 
          """, (requester_id, friend_id, friend_id, requester_id))
         
-        return self.cursor.fetchall()
+        return cursor.fetchall()
 
 
 
 
     def close(self):
-        self.cursor.close()
         self.connection.close()
