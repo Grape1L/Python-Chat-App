@@ -111,7 +111,7 @@ pip install -r requirements.txt
 Run the FastAPI application with Uvicorn using the project's entry point:
 
 ```bash
-uvicorn <module>:<app> --reload
+python -m uvicorn backend.main:app --reload
 ```
 
 > Replace `<module>:<app>` with the actual FastAPI application entry point used by the repository.
