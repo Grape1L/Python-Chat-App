@@ -61,7 +61,7 @@ class WebSocketManager:
             return False
 
         async with self._lock:
-            self.connected_clients.add_client(user.get("id"), websocket)
+            self.connected_clients.add_client(int(user.get("id")), websocket)
 
         await websocket.accept()
         
