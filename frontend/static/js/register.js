@@ -11,7 +11,6 @@ form.addEventListener("submit", async (event) => {
 
     try {
         const result = await registerUser(username, email, password, birthdate);
-        console.log(result);
         const messageContainer = document.querySelector("#message");
 
         if (!result) {
