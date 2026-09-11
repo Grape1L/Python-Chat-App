@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Path, Request, Response, status
 from fastapi.responses import FileResponse
-from models.user_models import UserLogin, UserRegister, UserResponse, UsernameModel
-from models.token_model import Token
-from database.database_control import DB
-from auth.auth_service import AuthService, get_current_active_user
+from backend.models.user_models import UserLogin, UserRegister, UserResponse, UsernameModel
+from backend.models.token_model import Token
+from backend.database.database_control import DB
+from backend.auth.auth_service import AuthService, get_current_active_user
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -136,8 +136,6 @@ def get_friends(requester_id = Depends(get_current_active_user), db: DB = Depend
     requester_id = int(requester_id.get("id"))
 
     result = db.get_users_friends(requester_id)
-    if not result:
-        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="You have no friends")
     
     return result
 
