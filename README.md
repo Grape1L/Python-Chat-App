@@ -6,8 +6,6 @@ The application also includes a small web interface built with **HTML, JavaScrip
 
 > **Project status:** Ongoing personal project. The codebase is actively being improved and refactored as new backend features and tests are added.
 
-## Screenshots
-
 ## Features
 
 - User registration and authentication
