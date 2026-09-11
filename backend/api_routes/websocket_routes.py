@@ -28,13 +28,13 @@ async def websocket_endpoint(websocket: WebSocket, db: DB = Depends(get_db_ws)):
 
             if disappear == False:
                 db.save_message(
-                    sender_id=ws_manager.get_id_by_websocket(websocket), 
+                    sender_id=ws_manager.connected_clients.get_user_id(websocket), 
                     recipient_id=target_user_ID, 
                     content=data.get("content")
                 )
 
 
-            target_websocket = ws_manager.connected_clients.get(str(target_user_ID))
+            target_websocket = ws_manager.connected_clients.get_websocket(int(target_user_ID))
 
             if not target_websocket:
                 await ws_manager.send_message(websocket, websocket, {"error": "WebSocket not found"}, db)
