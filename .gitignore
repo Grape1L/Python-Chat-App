@@ -20,3 +20,5 @@ old/
 .env.*
 
 **/*.db
+
+frontend/helps/
