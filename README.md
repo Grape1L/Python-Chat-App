@@ -8,8 +8,6 @@ The application also includes a small web interface built with **HTML, JavaScrip
 
 ## Screenshots
 
-
-
 ## Features
 
 - User registration and authentication
@@ -120,7 +118,6 @@ uvicorn <module>:<app> --reload
 
 The project is designed to be run locally during development. Database and configuration details may change as the application continues to evolve.
 
-
 ## Frontend Note
 
 The application includes a functional browser UI so the backend can be used and demonstrated without a separate API client. The HTML, JavaScript, and CSS were written as part of the project, but the frontend is intentionally simple.
@@ -136,5 +133,6 @@ This is a personal project and is not presented as production-ready software. So
 - Improving error handling and validation across the application
 - Further hardening authentication and configuration for production deployment
 - Improving the frontend presentation where useful
+- Making the key not be created every time a user reloads the page, so that the earlier messages can be read too
 
 These limitations are part of the project's ongoing development and provide areas for further development.
