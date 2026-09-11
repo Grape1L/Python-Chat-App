@@ -50,13 +50,11 @@ function initWebsockets() {
 
     ws.onmessage = async (event) => {
         const message = JSON.parse(event.data);
-        console.log(message);
 
         if (message.id != state.targetUser_ID) {
             return;
         }
 
-        console.log("Received message:", message);
         if (message.error) {
             console.error(`Error from server: ${message.error}`);
             return;
@@ -67,7 +65,6 @@ function initWebsockets() {
                 keys.privateKey,
                 BigInt(message.message),
             );
-            console.log("keys.sharedKey: ", keys.sharedKey);
 
             if (message.firstSender === true) {
                 let keyToSend = calculateKey(keys.privateKey);
@@ -128,7 +125,6 @@ async function handleSendMessage(event) {
         DOM.messageInput.value,
         keys.sharedKey,
     );
-    console.log(encryptedMessage);
 
     ws.send(
         JSON.stringify({
@@ -188,9 +184,7 @@ async function renderFriends() {
         button.addEventListener("click", async () => {
             state.targetUser_ID = friend[0];
 
-            console.log("keys.privateKey: ", keys.privateKey);
             let keyToSend = calculateKey(keys.privateKey);
-            console.log("keyToSend: ", keyToSend);
             ws.send(
                 JSON.stringify({
                     type: "key",
