@@ -16,8 +16,8 @@ The application also includes a small web interface built with **HTML, JavaScrip
 - Separation of HTTP API and real-time communication logic
 - Server-side HTML rendering with **Jinja2Templates**
 - JSON-based API endpoints
-- Client-side token storage for authenticated requests
-- End-to-end encrypted messaging / application data handling
+- HttpOnly cookie storage for authenticated requests
+- Basic end-to-end encrypted messaging / application data handling
 - Basic browser interface for interacting with the application
 
 ## Tech Stack
