@@ -1,18 +1,20 @@
 **/*.key
 
-old/
+**/*.pyo
+
+.vscode/
+
+**/*.pyc
+**/__pycache__/
 
 **/venv/
 **/.venv/
 
 **/pytest_cache/
-**/__pycache__/
 
-*.pyc
-*.pyo
+**/*.key
 
-.vscode/
-.idea/
+old/
 
 .env
 .env.*
