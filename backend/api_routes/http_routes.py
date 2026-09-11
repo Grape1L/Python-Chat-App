@@ -22,6 +22,15 @@ def parse_database_data(data: tuple) -> UserResponse:
     return UserResponse(id=data[0], username=data[1], email=data[2])
 
 
+def handle_friend_request_result(result):
+    if len(result) == 2:
+        if result[1] == "pending":
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Friend request already sent")
+        elif result[1] == "accepted":
+            return { "message": "You are already friends" }
+        elif result[1] == "blocked":
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You got blocked")
+
 
 @router.get("/users")
 def get_users(db: DB = Depends(get_db)):
@@ -98,13 +107,10 @@ def add_friend_by_id(user_id: int, requester = Depends(get_current_active_user),
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Can't add yourself to friends")
     
     result = db.add_friend(min(user_id, requester_id), max(user_id, requester_id), requester_id)
-    if len(result) == 2:
-        if result[1] == "pending":
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Friend request already sent")
-        elif result[1] == "accepted":
-            return { "message": "You are already friends" }
-        elif result[1] == "blocked":
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You got blocked")
+
+    early_response = handle_friend_request_result(result)
+    if early_response:
+        return early_response
     
     return { "message": result[0] }
 
@@ -120,13 +126,10 @@ def add_friend_by_username(payload: UsernameModel, requester = Depends(get_curre
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Can't add yourself to friends")
     
     result = db.add_friend(min(user[0], requester_id), max(user[0], requester_id), requester_id)
-    if len(result) == 2:
-        if result[1] == "pending":
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Friend request already sent")
-        elif result[1] == "accepted":
-            return { "message": "You are already friends" }
-        elif result[1] == "blocked":
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You got blocked")
+
+    early_response = handle_friend_request_result(result)
+    if early_response:
+        return early_response
         
     return { "message": result[0] }
 
