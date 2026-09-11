@@ -54,7 +54,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     
     access_token = authService.create_access_token(
         data={"id": str(result[0]), "username": result[1]}, 
-        expires_delta=timedelta(hours=24)
+        expires_delta=timedelta(hours=1)
     )
 
     response.set_cookie(
@@ -79,7 +79,7 @@ async def register(response: Response, user: UserRegister, db: DB = Depends(get_
     user_id = db.add_user(user)
 
     access_token = authService.create_access_token(
-        data={"id": str(user_id), "username": user.username}, expires_delta=timedelta(hours=24)
+        data={"id": str(user_id), "username": user.username}, expires_delta=timedelta(hours=1)
     )
 
     response.set_cookie(
@@ -103,6 +103,10 @@ def getCurrentUser(currentUser = Depends(get_current_active_user)):
 @router.post("/addfriend/{user_id}")
 def add_friend_by_id(user_id: int, requester = Depends(get_current_active_user), db: DB = Depends(get_db)):
     requester_id = int(requester.get("id"))
+
+    if not db.get_user_by_id(user_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
     if user_id == requester_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Can't add yourself to friends")
     
