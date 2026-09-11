@@ -137,4 +137,4 @@ This is a personal project and is not presented as production-ready software. So
 - Further hardening authentication and configuration for production deployment
 - Improving the frontend presentation where useful
 
-These limitations are part of the project's ongoing development and provide areas for further iteration.
+These limitations are part of the project's ongoing development and provide areas for further development.
