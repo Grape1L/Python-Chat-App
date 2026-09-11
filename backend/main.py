@@ -38,6 +38,6 @@ app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 @app.get("/")
 async def root(request: Request): 
     return templates.TemplateResponse(
-        "notLoggedPage.html", 
-        { "request": request }
+        request=request,
+        name="notLoggedPage.html"
     )
