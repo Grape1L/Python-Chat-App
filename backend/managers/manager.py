@@ -89,12 +89,12 @@ class WebSocketManager:
 
         await target_websocket.send_json(full_message)
 
-    async def disconnect(self, websocket: WebSocket):
+    async def disconnect(self, websocket: WebSocket, code: int = 1000):
         async with self._lock:
             self.connected_clients.remove_by_ws(websocket)
 
         try:
-            await websocket.close()
+            await websocket.close(code=code)
         except Exception:
             print("Error closing websocket during disconnecting")
             
