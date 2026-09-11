@@ -20,8 +20,11 @@ export async function apiFetch(endpoint, options = {}) {
     const data = await res.json().catch(() => null);
 
     if (!res.ok) {
-        console.error(`API error: ${res.status}`, data?.detail || data);
-        return null;
+        const error = new Error(
+            data.detail || `Request failed (${res.status})`,
+        );
+        error.status = res.status;
+        throw error;
     }
 
     return data;
