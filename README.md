@@ -62,7 +62,7 @@ The authentication flow is based around:
 1. User registration and account creation.
 2. Passwords being stored as hashes rather than plaintext passwords.
 3. Successful login producing a JWT access token.
-4. The client storing the token locally and attaching it to authenticated requests.
+4. The JWT is being stored as a cookie.
 5. Backend routes validating the token before allowing access to protected functionality.
 
 Password hashing is handled with **bcrypt**, while JWT encoding/decoding is handled with **python-jose**.
