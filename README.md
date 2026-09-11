@@ -1,6 +1,6 @@
 # Real-Time Messaging App
 
-A personal real-time messaging application built with **Python and FastAPI**. The project focuses primarily on backend development, including HTTP API design, authentication, persistent data storage, WebSocket-based real-time communication, and automated testing.
+A personal real-time messaging application built with **Python and FastAPI**. The project focuses primarily on backend development, including HTTP API design, authentication, persistent data storage and WebSocket-based real-time communication.
 
 The application also includes a small web interface built with **HTML, JavaScript, and basic CSS**. The frontend is intentionally simple and functional; the main goal of the project was to build and understand the backend rather than create a polished frontend UI.
 
@@ -16,9 +16,8 @@ The application also includes a small web interface built with **HTML, JavaScrip
 - Separation of HTTP API and real-time communication logic
 - Server-side HTML rendering with **Jinja2Templates**
 - JSON-based API endpoints
-- Client-side token storage for authenticated requests
-- Automated backend tests using **pytest**
-- End-to-end encrypted messaging / application data handling
+- HttpOnly cookie storage for authenticated requests
+- Basic end-to-end encrypted messaging / application data handling
 - Basic browser interface for interacting with the application
 
 ## Tech Stack
@@ -81,12 +80,6 @@ Sensitive data is handled with the project's authentication and encryption mecha
 
 SQLite was chosen because it keeps the project lightweight and easy to run locally while still providing a real relational database for practicing SQL-backed application development.
 
-## Testing
-
-Backend functionality is tested with **pytest**.
-
-The test suite is used to verify application components and backend behaviour, including connection-management logic and other core functionality. Writing tests alongside the application has also helped identify edge cases and regressions while the project is being refactored.
-
 ## Running Locally
 
 ### Requirements
@@ -120,7 +113,7 @@ The project is designed to be run locally during development. Database and confi
 
 The application includes a functional browser UI so the backend can be used and demonstrated without a separate API client. The HTML, JavaScript, and CSS were written as part of the project, but the frontend is intentionally simple.
 
-The CSS in particular is **basic, custom CSS** intended to make the application usable and presentable rather than demonstrate advanced frontend engineering. The project's main emphasis is on the **Python backend, API design, authentication, database work, WebSockets, and testing**.
+The CSS in particular is **basic, custom CSS** intended to make the application usable and presentable rather than demonstrate advanced frontend engineering. The project's main emphasis is on the **Python backend, API design, authentication, database work and WebSockets**.
 
 ## Current Limitations
 
