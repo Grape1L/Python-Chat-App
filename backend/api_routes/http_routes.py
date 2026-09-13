@@ -66,7 +66,7 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
         max_age=3600
     )
 
-    return {"message": "logged in"}
+    return { "message": "User logged in successfully" }
 
 
 @router.post("/auth/register")
@@ -92,7 +92,7 @@ async def register(response: Response, user: UserRegister, db: DB = Depends(get_
     )
     
 
-    return {"message": "registered"}
+    return { "message": "User registered successfully" }
 
 
 @router.get("/auth/me")
