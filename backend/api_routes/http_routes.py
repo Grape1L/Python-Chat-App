@@ -160,7 +160,3 @@ def get_messages(friend_id: int, requester = Depends(get_current_active_user), d
         return []
 
     return messages
-
-@router.get("/chats")
-def chats(db: DB = Depends(get_db)):
-    return FileResponse("../frontend/static/protected/chats.html")
