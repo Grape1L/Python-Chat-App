@@ -29,17 +29,6 @@ async def websocket_endpoint(websocket: WebSocket, db: DB = Depends(get_db_ws)):
                 await ws_manager.disconnect(websocket, 1008)
                 return
 
-            # Check if the message should be saved in the database
-            disappear: bool = data.get("disappear")
-
-            if not disappear:
-                db.save_message(
-                    sender_id=sender_id, 
-                    recipient_id=target_user_ID, 
-                    content=data.get("content")
-                )
-
-
             target_websocket = ws_manager.connected_clients.get_websocket(int(target_user_ID))
 
             if not target_websocket:
@@ -61,6 +50,16 @@ async def websocket_endpoint(websocket: WebSocket, db: DB = Depends(get_db_ws)):
 
 
             await ws_manager.send_message(websocket, target_websocket, { "message": data.get("content"), "type": data.get("type") }, db)
+
+            # Check if the message should be saved in the database
+            disappear: bool = data.get("disappear")
+
+            if not disappear:
+                db.save_message(
+                    sender_id=sender_id, 
+                    recipient_id=target_user_ID, 
+                    content=data.get("content")
+                )
 
     except WebSocketDisconnect:
         await ws_manager.disconnect(websocket)
