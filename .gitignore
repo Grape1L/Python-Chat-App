@@ -22,3 +22,5 @@ old/
 **/*.db
 
 frontend/helps/
+
+**test*
