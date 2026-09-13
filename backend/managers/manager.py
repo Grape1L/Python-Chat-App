@@ -96,5 +96,3 @@ class WebSocketManager:
             await self.client_websocket.close(code=code)
         except RuntimeError:
             pass
-            
-        # print(f"client disconnected - {websocket.client.host}:{websocket.client.port}")
