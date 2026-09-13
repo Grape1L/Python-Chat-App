@@ -88,7 +88,7 @@ function initWebsockets() {
             message.message,
             keys.sharedKey,
         );
-        createMessageElement(message.user, decryptedMessage, utc);
+        createMessageElement(decryptedMessage, utc);
     };
 
     ws.onerror = (error) => {
@@ -137,7 +137,7 @@ async function handleSendMessage(event) {
 
     const now = new Date();
     const utc = now.toISOString().slice(0, 19).replace("T", " ");
-    createMessageElement("You", DOM.messageInput.value, utc);
+    createMessageElement(DOM.messageInput.value, utc, true);
 
     DOM.messageInput.value = "";
 }
@@ -152,17 +152,18 @@ function toggleDisappearingMessages() {
     }
 }
 
-function createMessageElement(user, message, timestamp) {
+function createMessageElement(message, timestamp, you = false) {
     const p = document.createElement("p");
     p.appendChild(document.createTextNode(message));
 
     const timeSpan = document.createElement("span");
-    timeSpan.textContent = ` [${timestamp}]`;
+    const date = new Date(timestamp.replace(" ", "T") + "Z");
+    timeSpan.textContent = ` [${date.toLocaleString()}]`;
     timeSpan.style.fontSize = "0.8em";
     timeSpan.style.color = "#888";
     p.appendChild(timeSpan);
 
-    if (user === "You") {
+    if (you) {
         p.style.textAlign = "right";
     }
 
@@ -201,15 +202,14 @@ async function renderFriends() {
             const messages = await fetchMessageHistory(state.targetUser_ID);
 
             messages.forEach(async (message) => {
-                if (message[4] === state.currentUser.username) {
-                    message[4] = "You";
-                }
+                let you = false;
+                if (message[4] === state.currentUser.username) you = true;
 
                 const decryptedMessage = await decryptData(
                     message[2],
                     keys.sharedKey,
                 );
-                createMessageElement(message[4], decryptedMessage, message[3]);
+                createMessageElement(decryptedMessage, message[3], you);
             });
 
             DOM.chatTitle.textContent = friend[1];
