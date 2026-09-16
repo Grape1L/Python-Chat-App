@@ -84,11 +84,13 @@ function initWebsockets() {
         const now = new Date();
         const utc = now.toISOString().slice(0, 19).replace("T", " ");
 
-        const decryptedMessage = await decryptData(
-            message.message,
-            keys.sharedKey,
-        );
-        createMessageElement(decryptedMessage, utc);
+        // const decryptedMessage = await decryptData(
+        //     message.message,
+        //     keys.sharedKey,
+        // );
+        createMessageElement(message.message, utc);
+
+        DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
     };
 
     ws.onerror = (error) => {
@@ -121,16 +123,16 @@ DOM.messageForm.addEventListener("submit", handleSendMessage);
 async function handleSendMessage(event) {
     event.preventDefault();
 
-    const encryptedMessage = await encryptData(
-        DOM.messageInput.value,
-        keys.sharedKey,
-    );
+    // const encryptedMessage = await encryptData(
+    //     DOM.messageInput.value,
+    //     keys.sharedKey,
+    // );
 
     ws.send(
         JSON.stringify({
             type: "text",
             targetUser_ID: state.targetUser_ID,
-            content: encryptedMessage,
+            content: DOM.messageInput.value,
             disappear: state.disappearingMessages,
         }),
     );
@@ -138,6 +140,8 @@ async function handleSendMessage(event) {
     const now = new Date();
     const utc = now.toISOString().slice(0, 19).replace("T", " ");
     createMessageElement(DOM.messageInput.value, utc, true);
+
+    DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
 
     DOM.messageInput.value = "";
 }
@@ -205,12 +209,14 @@ async function renderFriends() {
                 let you = false;
                 if (message[4] === state.currentUser.username) you = true;
 
-                const decryptedMessage = await decryptData(
-                    message[2],
-                    keys.sharedKey,
-                );
-                createMessageElement(decryptedMessage, message[3], you);
+                // const decryptedMessage = await decryptData(
+                //     message[2],
+                //     keys.sharedKey,
+                // );
+                createMessageElement(message[2], message[3], you);
             });
+
+            DOM.chatMessages.scrollTop = DOM.chatMessages.scrollHeight;
 
             DOM.chatTitle.textContent = friend[1];
         });
