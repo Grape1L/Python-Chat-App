@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
-from fastapi.requests import Request
 from backend.api_routes.websocket_routes import router as websocket_router
 from backend.api_routes.http_routes import router as http_router
 from fastapi.staticfiles import StaticFiles
 from backend.database.database_control import DB
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.requests import Request
+from fastapi.exceptions import HTTPException
+from backend.auth.auth_service import verify_token
 
 app = FastAPI(
     docs_url=None,
@@ -22,7 +24,8 @@ app.add_middleware(
 )
 
 
-templates = Jinja2Templates(directory="frontend/templates")
+templates = Jinja2Templates(directory="frontend/static/")
+
 
 # Start up database
 db = DB()
@@ -35,9 +38,19 @@ app.include_router(http_router)
 
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
+
 @app.get("/")
-async def root(request: Request): 
-    return templates.TemplateResponse(
-        request=request,
-        name="notLoggedPage.html"
-    )
+async def root(request: Request):
+    token = request.cookies.get("access_token")
+
+    try:
+        verify_token(token)
+        return templates.TemplateResponse(
+            request=request,
+            name="protected/chats.html"
+        )
+    except HTTPException:
+        return templates.TemplateResponse(
+            request=request,
+            name="public/notLoggedPage.html"
+        )
