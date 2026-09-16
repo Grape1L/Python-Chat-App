@@ -46,6 +46,9 @@ def verify_token(token: str):
         headers={"WWW-Authenticate": "Bearer"}
     )
 
+    if token is None:
+        raise credentials_exception
+
     try:
         payload = jwt.decode(token, KEY, algorithms=[ALGORITHM])
 
