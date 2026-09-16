@@ -139,8 +139,8 @@ def add_friend_by_username(payload: UsernameModel, requester = Depends(get_curre
 
 
 @router.get("/friends")
-def get_friends(requester_id = Depends(get_current_active_user), db: DB = Depends(get_db)):
-    requester_id = int(requester_id.get("id"))
+def get_friends(requester = Depends(get_current_active_user), db: DB = Depends(get_db)):
+    requester_id = int(requester.get("id"))
 
     result = db.get_users_friends(requester_id)
     
