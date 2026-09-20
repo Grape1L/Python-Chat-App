@@ -23,13 +23,12 @@ def parse_database_data(data: tuple) -> UserResponse:
 
 
 def handle_friend_request_result(result):
-    if len(result) == 2:
-        if result[1] == "pending":
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Friend request already sent")
-        elif result[1] == "accepted":
-            return { "message": "You are already friends" }
-        elif result[1] == "blocked":
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You got blocked")
+    if result[1] == "pending":
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Friend request already sent")
+    elif result[1] == "accepted":
+        return { "message": "You are already friends" }
+    elif result[1] == "blocked":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You got blocked")
 
 
 @router.get("/users")
